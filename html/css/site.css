@@ -1,0 +1,27 @@
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    font-family: 'Open Sans', sans-serif;
+}
+
+main {
+    flex: 1 0 auto;
+    text-align: center;
+}
+
+.page-footer {
+    padding-top: 0px;
+}
+
+.brand-logo, h1 {
+    font-family: 'Ropa Sans', sans-serif;
+}
+
+.control {
+    padding-top: 20px;
+}
+
+.we {
+    font-size: 30px;
+}

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Ropa+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="vendor/materialize/css/materialize.css" media="screen,projection"/>
+    <link rel="stylesheet" href="css/site.css" media="screen,projection" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+
+<body>
+    <header>
+        <nav role="navigation">
+            <div class="nav-wrapper container">
+                <span class="brand-logo">Telecom&NonBreakingSpace;Tower</span>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <div class="container">
+            <h1>Simulato<span class="we">we</span>r</h1>
+            <canvas id="ledStripeCanvas" style="border:2px solid #d3d3d3;">
+                    Your browser does not support the HTML5 canvas tag.</canvas>
+        </div>
+    </main>
+
+    <footer class="page-footer grey darken-2">
+        <div class="footer-copyright">
+            <div class="container">
+                © 2018 Jacques Supcik ● Haute école d'ingénierie et d'architecture ● GDG Fribourg
+            </div>
+        </div>
+    </footer>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="vendor/materialize/js/bin/materialize.min.js"></script>
+    <script src="js/tower.js"></script>
+    <script>
+        $( document ).ready(function() { 
+            start_stripe(128, 8);
+        });
+    </script> 
+
+</body>
+
+</html>
