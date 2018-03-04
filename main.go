@@ -5,31 +5,45 @@ import (
 	"fmt"
 	"net"
 	"net/http"
+	"os"
+	"runtime/trace"
 	"sync"
 	"time"
 
-	"github.com/telecom-tower/grpc-renderer"
-
 	"github.com/gorilla/mux"
+	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 	ws2811 "github.com/supcik/web_ws281x_go"
+	"github.com/telecom-tower/grpc-renderer"
 )
 
 func main() {
 	debug := flag.Bool("debug", false, "Debug mode")
 	verbose := flag.Bool("verbose", false, "Verbose mode")
 	httpAddress := flag.String("http-address", "127.0.0.1", "listening HTTP address")
+	traceFile := flag.String("trace", "", "Generate tracing file")
 	httpPort := flag.Int("http-port", 8080, "listening HTTP port")
 	grpcPort := flag.Int("grpc-port", 10000, "listening gRPC port")
 
 	flag.Parse()
-
 	if *debug {
 		log.SetLevel(log.DebugLevel)
 	} else if *verbose {
 		log.SetLevel(log.InfoLevel)
 	} else {
 		log.SetLevel(log.WarnLevel)
+	}
+
+	if *traceFile != "" {
+		f, err := os.Create(*traceFile)
+		if err != nil {
+			log.Panic(errors.WithMessage(err, "Unable to create trace file"))
+		}
+		err = trace.Start(f)
+		defer trace.Stop()
+		if err != nil {
+			log.Panic(errors.WithMessage(err, "Unable to trace"))
+		}
 	}
 
 	// Create and run hub
