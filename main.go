@@ -6,6 +6,7 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"os/signal"
 	"runtime/trace"
 	"sync"
 	"time"
@@ -96,6 +97,15 @@ func main() {
 		wg.Done()
 	}()
 
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt)
+	go func() {
+		for range c {
+			trace.Stop()
+			log.Info("Finished")
+			os.Exit(0)
+		}
+	}()
+
 	wg.Wait()
-	log.Info("Finished")
 }
