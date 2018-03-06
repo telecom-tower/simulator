@@ -36,6 +36,8 @@ jobs:
         - build
 
   deploy:
+    docker:
+      - image: circleci/golang:1.10
     steps:
       - checkout
     attach_workspace:
