@@ -35,12 +35,12 @@ jobs:
       paths:
         - build
 
-    deploy:
-      - attach_workspace:
-          at: build
-      - store_artifacts:
-          path: build
-          destination: build
+  deploy:
+    - attach_workspace:
+        at: build
+    - store_artifacts:
+        path: build
+        destination: build
       
 workflows:
     version: 2
