@@ -75,7 +75,7 @@ func main() {
 		log.Debug("Serving websocket")
 		ws2811.ServeWs(hub, w, r)
 	})
-	r.PathPrefix("/").Handler(http.FileServer(FS(false)))
+	r.PathPrefix("/").Handler(http.FileServer(FS(false))) // nolint
 
 	grpcLis, err := net.Listen("tcp", fmt.Sprintf(":%d", *grpcPort))
 	if err != nil {
