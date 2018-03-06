@@ -1,13 +1,11 @@
 version: 2
 jobs:
-  build:
+  install_depend:
     docker:
-      - image: circleci/golang:1.9
+      - image: circleci/golang:1.10
     environment:
-      - PROTOC_VERSION: "3.5.1"  
-    working_directory: /go/src/github.com/telecom-tower/simulator
+      - PROTOC_VERSION: "3.5.1"
     steps:
-      - checkout
       - run:
           command: wget -q -nc https://github.com/google/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-linux-x86_64.zip
           working_directory: /tmp
@@ -20,6 +18,19 @@ jobs:
       - run: go get -u github.com/alecthomas/gometalinter
       - run: go get -u github.com/mitchellh/gox
       - run: go get -u github.com/mjibson/esc
+    persist_to_workspace:
+      root: /
+      paths:
+        - go/bin
+        - usr/local/bin/protoc
+        - usr/local/include/google/protobuf
+
+  build:
+    docker:
+      - image: circleci/golang:1.10
+    working_directory: /go/src/github.com/telecom-tower/simulator
+    steps:
+      - checkout
       - run: gometalinter --install
       - run:
           command: git clone https://github.com/telecom-tower/towerapi.git
@@ -30,6 +41,27 @@ jobs:
       - run: go test -v ./...
       - run: mkdir build
       - run: gox -output="build/{{.Dir}}_{{.OS}}_{{.Arch}}"
+    persist_to_workspace:
+      root: .
+      paths:
+        - build
+
+    deploy:
       - store_artifacts:
           path: build
           destination: build
+      
+workflows:
+    version: 2
+    default:
+      jobs:
+        - install_depend
+        - build:
+            requires:
+              - install_depend
+        - deploy:
+            filters:
+              tags:
+                only: /v[0-9]+(\.[0-9]+)*/
+            requires:
+              - build
