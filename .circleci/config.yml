@@ -36,6 +36,8 @@ jobs:
         - build
 
   deploy:
+    steps:
+      - checkout
     attach_workspace:
       at: build
     store_artifacts:
