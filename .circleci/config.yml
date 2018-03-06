@@ -18,7 +18,8 @@ jobs:
       - run: go get -u google.golang.org/grpc
       - run: go get -u github.com/golang/protobuf/protoc-gen-go
       - run: go get -u github.com/alecthomas/gometalinter
-      - run: go get github.com/mitchellh/gox
+      - run: go get -u github.com/mitchellh/gox
+      - run: go get -u github.com/mjibson/esc
       - run: gometalinter --install
       - run:
           command: git clone https://github.com/telecom-tower/towerapi.git
