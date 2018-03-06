@@ -31,9 +31,9 @@ jobs:
       - run: mkdir build
       - run: gox -output="build/{{.Dir}}_{{.OS}}_{{.Arch}}"
     persist_to_workspace:
-      root: .
+      root: build
       paths:
-        - build
+        - "*"
 
   deploy:
     docker:

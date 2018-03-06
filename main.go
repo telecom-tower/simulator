@@ -1,7 +1,7 @@
 package main
 
 //go:generate protoc -I $GOPATH/src/github.com/telecom-tower/towerapi/v1 telecomtower.proto --go_out=plugins=grpc:$GOPATH/src/github.com/telecom-tower/towerapi/v1
-//go:generate esc -o html.go -pkg main html
+//go:generate esc -prefix html -ignore .DS_Store -o html.go -pkg main html
 
 import (
 	"flag"
@@ -76,6 +76,7 @@ func main() {
 		ws2811.ServeWs(hub, w, r)
 	})
 	r.PathPrefix("/").Handler(http.FileServer(FS(false))) // nolint
+	// r.PathPrefix("/").Handler(http.FileServer(http.Dir("html"))) // nolint
 
 	grpcLis, err := net.Listen("tcp", fmt.Sprintf(":%d", *grpcPort))
 	if err != nil {
