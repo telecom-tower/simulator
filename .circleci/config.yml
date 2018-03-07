@@ -21,7 +21,7 @@ jobs:
       - run: go get -u github.com/mjibson/esc
       - run: cp -a /go/bin/* ${HOME}/workspace/bin
       - persist_to_workspace:
-          root: ${HOME}
+          root: "~"
           paths:
             - workspace
   test:
@@ -30,7 +30,7 @@ jobs:
     working_directory: /go/src/github.com/telecom-tower/simulator
     steps:
       - attach_workspace:
-          at: ${HOME}
+          at: "~"
       - run: sudo mkdir -p /usr/local/bin/
       - run: sudo cp -a ${HOME}/workspace/bin/* /usr/local/bin/
       - run: sudo mkdir -p /usr/local/include/google/
