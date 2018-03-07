@@ -55,7 +55,10 @@ workflows:
     default:
       jobs:
         - setup
-        - test
+        - test:
+            requires:
+              - setup
+              
 #        - deploy:
 #            filters:
 #              branches:
