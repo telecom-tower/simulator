@@ -41,9 +41,9 @@ jobs:
     steps:
       - attach_workspace:
           at: build
-    store_artifacts:
-      path: build
-      destination: build
+      - store_artifacts:
+          path: build
+          destination: build
       
 workflows:
     version: 2
@@ -53,6 +53,6 @@ workflows:
         - deploy:
             filters:
               tags:
-                only: /v[0-9]+(\.[0-9]+)*/
+                only: /^v[0-9]+(\.[0-9]+)/
             requires:
               - build
