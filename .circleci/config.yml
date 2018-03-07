@@ -14,7 +14,7 @@ jobs:
           command: unzip /tmp/protoc-${PROTOC_VERSION}-linux-x86_64.zip
           working_directory: "{{ .Environment.HOME }}/workspace"
       - run: find ${HOME}
-      - run: sudo chmod +rx ${HOME}/workspace/bin/protoc
+      - run: chmod +rx ${HOME}/workspace/bin/protoc
       - run: go get -u google.golang.org/grpc
       - run: go get -u github.com/golang/protobuf/protoc-gen-go
       - run: go get -u github.com/goreleaser/goreleaser
