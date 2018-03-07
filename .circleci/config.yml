@@ -1,11 +1,10 @@
 version: 2
 jobs:
-  build:
+  setup:
     docker:
       - image: circleci/golang:1.10
     environment:
       - PROTOC_VERSION: "3.5.1"
-    working_directory: /go/src/github.com/telecom-tower/simulator
     steps:
       - run:
           command: wget -q -nc https://github.com/google/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-linux-x86_64.zip
@@ -17,8 +16,20 @@ jobs:
       - run: go get -u google.golang.org/grpc
       - run: go get -u github.com/golang/protobuf/protoc-gen-go
       - run: go get -u github.com/alecthomas/gometalinter
-      - run: go get -u github.com/mitchellh/gox
+      - run: go get -u github.com/goreleaser/goreleaser
       - run: go get -u github.com/mjibson/esc
+      - persist_to_workspace:
+          root: /
+          paths:
+            - /usr/local/bin/protoc
+            - /usr/local/include/google/protobuf
+            - /go/bin
+
+  test:
+    working_directory: /go/src/github.com/telecom-tower/simulator
+    steps:
+      - attach_workspace:
+          at: /
       - checkout
       - run: gometalinter --install
       - run:
@@ -28,12 +39,6 @@ jobs:
       - run: go get -v -t -d ./...
       - run: gometalinter --deadline 2m main.go
       - run: go test -v ./...
-      - run: mkdir build
-      - run: gox -output="build/{{.Dir}}_{{.OS}}_{{.Arch}}"
-      - persist_to_workspace:
-          root: build
-          paths:
-            - "*"
 
   deploy:
     docker:
@@ -49,12 +54,13 @@ workflows:
     version: 2
     default:
       jobs:
-        - build
-        - deploy:
-            filters:
-              branches:
-                ignore: /.*/
-              tags:
-                only: /^v[0-9]+(\.[0-9]+).*/
-            requires:
-              - build
+        - setup
+        - test
+#        - deploy:
+#            filters:
+#              branches:
+#                ignore: /.*/
+#              tags:
+#                only: /^v[0-9]+(\.[0-9]+).*/
+#            requires:
+#              - build
