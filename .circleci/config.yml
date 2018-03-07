@@ -21,9 +21,9 @@ jobs:
       - persist_to_workspace:
           root: /
           paths:
-            - /usr/local/bin/protoc
-            - /usr/local/include/google/protobuf
-            - /go/bin
+            - usr/local/bin/protoc
+            - usr/local/include/google/protobuf
+            - go/bin
 
   test:
     working_directory: /go/src/github.com/telecom-tower/simulator
@@ -58,7 +58,7 @@ workflows:
         - test:
             requires:
               - setup
-              
+
 #        - deploy:
 #            filters:
 #              branches:
