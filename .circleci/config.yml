@@ -6,33 +6,36 @@ jobs:
     environment:
       - PROTOC_VERSION: "3.5.1"
     steps:
+      - run: mkdir -p ${HOME}/workspace
       - run:
           command: wget -q -nc https://github.com/google/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-linux-x86_64.zip
           working_directory: /tmp
       - run:
           command: sudo unzip /tmp/protoc-${PROTOC_VERSION}-linux-x86_64.zip
-          working_directory: /usr/local
-      - run: sudo chmod +rx /usr/local/bin/protoc
+          working_directory: ${HOME}/workspace
+      - run: sudo chmod +rx ${HOME}/workspace/bin/protoc
       - run: go get -u google.golang.org/grpc
       - run: go get -u github.com/golang/protobuf/protoc-gen-go
-      - run: go get -u github.com/alecthomas/gometalinter
       - run: go get -u github.com/goreleaser/goreleaser
       - run: go get -u github.com/mjibson/esc
+      - run: cp -a /go/bin/* ${HOME}/workspace/bin
       - persist_to_workspace:
-          root: /
+          root: ${HOME}
           paths:
-            - usr/local/bin/protoc
-            - usr/local/include/google/protobuf
-            - go/bin
-
+            - workspace
   test:
     docker:
       - image: circleci/golang:1.10
     working_directory: /go/src/github.com/telecom-tower/simulator
     steps:
       - attach_workspace:
-          at: /
+          at: ${HOME}
+      - run: sudo mkdir -p /usr/local/bin/
+      - run: sudo cp -a ${HOME}/workspace/bin/* /usr/local/bin/
+      - run: sudo mkdir -p /usr/local/include/google/
+      - run: sudo cp -a ${HOME}/workspace/include/google/protobuf /usr/local/include/google/
       - checkout
+      - run: go get -u github.com/alecthomas/gometalinter
       - run: gometalinter --install
       - run:
           command: git clone https://github.com/telecom-tower/towerapi.git
