@@ -12,7 +12,7 @@ jobs:
           working_directory: /tmp
       - run:
           command: unzip /tmp/protoc-${PROTOC_VERSION}-linux-x86_64.zip
-          working_directory: "{{ .Environment.HOME }}/workspace"
+          working_directory: "~/workspace"
       - run: find ${HOME}
       - run: chmod +rx ${HOME}/workspace/bin/protoc
       - run: go get -u google.golang.org/grpc
