@@ -9,7 +9,9 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"os/exec"
 	"os/signal"
+	"runtime"
 	"runtime/trace"
 	"sync"
 	"time"
@@ -23,10 +25,26 @@ import (
 
 var version = "master"
 
+func startBrowser(url string) bool {
+	// try to start the browser
+	var args []string
+	switch runtime.GOOS {
+	case "darwin":
+		args = []string{"open"}
+	case "windows":
+		args = []string{"cmd", "/c", "start"}
+	default:
+		args = []string{"xdg-open"}
+	}
+	cmd := exec.Command(args[0], append(args[1:], url)...) // nolint: gas
+	return cmd.Start() == nil
+}
+
 func main() { // nolint: gocyclo
 	debug := flag.Bool("debug", false, "Debug mode")
 	verbose := flag.Bool("verbose", false, "Verbose mode")
 	showVer := flag.Bool("version", false, "Show version")
+	noStartBrowser := flag.Bool("no-start-browser", false, "Don't start browser")
 	httpAddress := flag.String("http-address", "127.0.0.1", "listening HTTP address")
 	traceFile := flag.String("trace", "", "Generate tracing file")
 	httpPort := flag.Int("http-port", 8080, "listening HTTP port")
@@ -104,11 +122,17 @@ func main() { // nolint: gocyclo
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 	}
-	log.Infof("HTTP server ready at http://%s", a)
 	go func() {
 		log.Fatal(srv.ListenAndServe())
 		wg.Done()
 	}()
+	log.Infof("HTTP server ready at http://%s", a)
+
+	if !*noStartBrowser {
+		if !startBrowser(fmt.Sprintf("http://%s", a)) {
+			log.Warn("Unable to start browser")
+		}
+	}
 
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)
