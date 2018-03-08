@@ -1,3 +1,5 @@
+project_name: telecom-tower-simulator
+
 builds:
   - binary: simulator
     goos:
@@ -5,6 +7,7 @@ builds:
       - darwin
       - linux
     goarch:
+      - 386
       - amd64
       - arm
       - arm64
@@ -27,3 +30,15 @@ archive:
   files:
     - LICENSE
     - README.md
+
+brew:
+  github:
+    owner: telecom-tower
+    name: homebrew-tap
+
+  commit_author:
+    name: goreleaserbot
+    email: goreleaser@telecomtower.xyz
+
+  folder: Formula
+  homepage: "https://github.com/telecom-tower"
