@@ -21,15 +21,24 @@ import (
 	"github.com/telecom-tower/grpc-renderer"
 )
 
-func main() {
+var version = "master"
+
+func main() { // nolint: gocyclo
 	debug := flag.Bool("debug", false, "Debug mode")
 	verbose := flag.Bool("verbose", false, "Verbose mode")
+	showVer := flag.Bool("version", false, "Show version")
 	httpAddress := flag.String("http-address", "127.0.0.1", "listening HTTP address")
 	traceFile := flag.String("trace", "", "Generate tracing file")
 	httpPort := flag.Int("http-port", 8080, "listening HTTP port")
 	grpcPort := flag.Int("grpc-port", 10000, "listening gRPC port")
 
 	flag.Parse()
+
+	if *showVer {
+		fmt.Printf("Telecom Tower Simulator // version : %v\n", version)
+		os.Exit(0)
+	}
+
 	if *debug {
 		log.SetLevel(log.DebugLevel)
 	} else if *verbose {

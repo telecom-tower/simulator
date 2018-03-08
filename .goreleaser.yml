@@ -1,7 +1,7 @@
 project_name: telecom-tower-simulator
 
 builds:
-  - binary: simulator
+  - binary: telecom-tower-simulator
     goos:
       - windows
       - darwin
