@@ -73,10 +73,16 @@ workflows:
     version: 2
     default:
       jobs:
-        - setup
+        - setup:
+            filters:
+              tags:
+                only: /.*/
         - test:
             requires:
               - setup
+            filters:
+              tags:
+                only: /.*/
         - deploy:
             requires:
               - test
