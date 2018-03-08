@@ -64,7 +64,7 @@ jobs:
       - run: go generate
       - run: go get -v -d ./...
       - run: go get -u github.com/goreleaser/goreleaser
-      - run: gorelease
+      - run: goreleaser
       - store_artifacts:
           path: dist
           destination: dist
