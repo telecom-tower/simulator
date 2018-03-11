@@ -61,8 +61,8 @@
     ".",
     "font"
   ]
-  revision = "cdc54cdfa13fd8478b66417bf8d608bf35ee10c8"
-  version = "v1.0.0-alpha.1"
+  revision = "89a8730b75b2eb0759fce96bac81209708900729"
+  version = "v1.0.0-alpha.2"
 
 [[projects]]
   name = "github.com/telecom-tower/sdk"
@@ -71,10 +71,10 @@
   version = "v1.0.0-alpha.1"
 
 [[projects]]
-  branch = "master"
   name = "github.com/telecom-tower/towerapi"
   packages = ["v1"]
   revision = "cab082eacd050950551a90215eb5378085b8d33b"
+  version = "v1.0.0-alpha.2"
 
 [[projects]]
   branch = "master"
