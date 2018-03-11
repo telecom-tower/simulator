@@ -18,6 +18,7 @@ jobs:
       - run: go get -u google.golang.org/grpc
       - run: go get -u github.com/golang/protobuf/protoc-gen-go
       - run: go get -u github.com/mjibson/esc
+      - run: curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
       - run: cp -a /go/bin/* ${HOME}/workspace/bin
       - persist_to_workspace:
           root: "~"
@@ -42,7 +43,7 @@ jobs:
           command: git clone https://github.com/telecom-tower/towerapi.git
           working_directory: /go/src/github.com/telecom-tower/
       - run: go generate
-      - run: go get -v -t -d ./...
+      - run: dep ensure
       - run: gometalinter --deadline 2m main.go
       - run: go test -v ./...
       - run: go build
@@ -62,7 +63,7 @@ jobs:
           command: git clone https://github.com/telecom-tower/towerapi.git
           working_directory: /go/src/github.com/telecom-tower/
       - run: go generate
-      - run: go get -v -d ./...
+      - run: dep ensure
       - run: go get -u github.com/goreleaser/goreleaser
       - run: goreleaser
       - store_artifacts:
