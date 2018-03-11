@@ -51,6 +51,7 @@ jobs:
   deploy:
     docker:
       - image: circleci/golang:1.10
+    working_directory: /go/src/github.com/telecom-tower/simulator
     steps:
       - attach_workspace:
           at: "~"
