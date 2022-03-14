@@ -1,11 +1,12 @@
 package main
 
-//go:generate protoc -I $GOPATH/src/github.com/telecom-tower/towerapi/v1 telecomtower.proto --go_out=plugins=grpc:$GOPATH/src/github.com/telecom-tower/towerapi/v1
-//go:generate esc -prefix html -ignore .DS_Store -o html.go -pkg main html
+//go generate protoc -I $GOPATH/src/github.com/telecom-tower/towerapi/v1 telecomtower.proto --go_out=plugins=grpc:$GOPATH/src/github.com/telecom-tower/towerapi/v1
 
 import (
+	"embed"
 	"flag"
 	"fmt"
+	"io/fs"
 	"net"
 	"net/http"
 	"os"
@@ -20,10 +21,13 @@ import (
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 	ws2811 "github.com/supcik/web_ws281x_go"
-	"github.com/telecom-tower/grpc-renderer"
+	renderer "github.com/telecom-tower/grpc-renderer"
 )
 
 var version = "master"
+
+//go:embed html
+var html_content embed.FS
 
 func startBrowser(url string) bool {
 	// try to start the browser
@@ -102,7 +106,14 @@ func main() { // nolint: gocyclo
 		log.Debug("Serving websocket")
 		ws2811.ServeWs(hub, w, r)
 	})
-	r.PathPrefix("/").Handler(http.FileServer(FS(false))) // nolint
+
+	serverRoot, err := fs.Sub(html_content, "html")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	//r.PathPrefix("/").Handler(http.StripPrefix("/html/", http.FileServer(http.FS(html_content)))) // nolint
+	r.PathPrefix("/").Handler(http.FileServer(http.FS(serverRoot)))
 	// r.PathPrefix("/").Handler(http.FileServer(http.Dir("html"))) // nolint
 
 	grpcLis, err := net.Listen("tcp", fmt.Sprintf(":%d", *grpcPort))
